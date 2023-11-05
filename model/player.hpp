@@ -13,7 +13,6 @@ class Player
         Collections collections;
         Skills skills;
         StatSet stats;
-        Player();
 };
 
 #endif
