@@ -4,10 +4,11 @@
 #include <string>
 
 #include "collections.hpp"
+#include "entity.hpp"
 #include "skills.hpp"
 #include "stats.hpp"
 
-class Player
+class Player: public Entity
 {
     public:
         Collections collections;
