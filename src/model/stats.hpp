@@ -24,6 +24,16 @@ class StatSet
         Stat health;
         Stat defense;
         Stat mana;
+        Stat speed;
+        Stat attackSpeed;
+        Stat miningSpeed;
+        Stat farmingSpeed;
+        Stat fishingSpeed;
+        Stat luck;
+        Stat fortune;
+        Stat wisdom;
+        Stat reach;
+        Stat vision;
         StatSet() = default;
         StatSet(
             Stat damage,
@@ -31,7 +41,17 @@ class StatSet
             Stat critDamage,
             Stat health,
             Stat defense,
-            Stat mana
+            Stat mana,
+            Stat speed,
+            Stat attackSpeed,
+            Stat miningSpeed,
+            Stat farmingSpeed,
+            Stat fishingSpeed,
+            Stat luck,
+            Stat fortune,
+            Stat wisdom,
+            Stat reach,
+            Stat vision
         );
         StatSet(
             int damage,
@@ -39,7 +59,17 @@ class StatSet
             int critDamage,
             int health,
             int defense,
-            int mana
+            int mana,
+            int speed,
+            int attackSpeed,
+            int miningSpeed,
+            int farmingSpeed,
+            int fishingSpeed,
+            int luck,
+            int fortune,
+            int wisdom,
+            int reach,
+            int vision
         );
 };
 

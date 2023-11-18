@@ -25,6 +25,11 @@ void Main::Update()
         {
             done = true;
         }
+
+        if (event.type == SDL_KEYDOWN)
+        {
+            std::cout << (char)event.key.keysym.sym << std::endl;
+        }
     }
 }
 
