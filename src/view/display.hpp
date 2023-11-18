@@ -5,14 +5,12 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 
-#include "event.hpp"
-
 class Display
 {
     public:
         Display();
         ~Display();
-        std::vector<Event> GetEvents();
+        std::vector<SDL_Event> GetEvents();
         void Render();
     private:
         SDL_Window *window;

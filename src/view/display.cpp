@@ -19,17 +19,14 @@ Display::Display()
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
-std::vector<Event> Display::GetEvents()
+std::vector<SDL_Event> Display::GetEvents()
 {
-    std::vector<Event> events;
+    std::vector<SDL_Event> events;
 
     SDL_Event windowEvent;
     while (SDL_PollEvent(&windowEvent))
     {
-        if (windowEvent.type == SDL_QUIT)
-        {
-            events.push_back(QUIT);
-        }
+        events.push_back(windowEvent);
     }
 
     return events;

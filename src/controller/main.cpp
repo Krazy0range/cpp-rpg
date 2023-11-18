@@ -2,6 +2,39 @@
 
 #include "main.hpp"
 
+void Main::Loop()
+{
+    std::cout << "Main Loop started" << std::endl;
+
+    done = false;
+    while (!done)
+    {
+        Update();
+        Render();
+    }
+
+    std::cout << "Main Loop finished" << std::endl;
+}
+
+void Main::Update()
+{
+    std::vector<SDL_Event> events = display->GetEvents();
+    for (SDL_Event event : events)
+    {
+        if (event.type == SDL_QUIT)
+        {
+            done = true;
+        }
+    }
+}
+
+void Main::Render()
+{
+    display->Render();
+}
+
+/* INITIALIZATION */
+
 Main::Main()
 {
     std::cout << std::endl;
@@ -12,40 +45,6 @@ Main::Main()
 
     std::cout << "Initialization completed" << std::endl;
 }
-
-Main::~Main()
-{
-    DeinitModel();
-    DeinitView();
-    DeinitController();
-
-    std::cout << "Deinitialization completed" << std::endl;
-    std::cout << std::endl;
-}
-
-void Main::Loop()
-{
-    std::cout << "Main Loop started" << std::endl;
-
-    bool done = false;
-    while (!done)
-    {
-        std::vector<Event> events = display->GetEvents();
-        for (Event event : events)
-        {
-            if (event == QUIT)
-            {
-                done = true;
-            }
-        }
-
-        display->Render();
-    }
-
-    std::cout << "Main Loop finished" << std::endl;
-}
-
-/* INITIALIZATION */
 
 void Main::InitModel()
 {
@@ -67,6 +66,16 @@ void Main::InitController()
 }
 
 /* DEINITIALIZATION */
+
+Main::~Main()
+{
+    DeinitModel();
+    DeinitView();
+    DeinitController();
+
+    std::cout << "Deinitialization completed" << std::endl;
+    std::cout << std::endl;
+}
 
 void Main::DeinitModel()
 {

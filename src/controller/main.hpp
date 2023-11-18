@@ -21,6 +21,7 @@ class Main
         void DeinitController();
         World *world;
         Display *display;
+        bool done;
 };
 
 #endif
