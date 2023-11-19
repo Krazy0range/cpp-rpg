@@ -5,24 +5,53 @@
 
 #include "stats.hpp"
 
+enum ItemRarity
+{
+    COMMON,
+    UNCOMMON,
+    RARE,
+    EPIC,
+    LEGENDARY,
+    MYTHICAL,
+    DIVINE
+};
+
+enum BlockDirection
+{
+    NORTH,
+    WEST,
+    SOUTH,
+    EAST
+};
+
 class Item
 {
     public:
-        StatSet stats;
+        std::string name;
+        std::string lore;
         std::string texture;
-        Item();
+        ItemRarity rarity;
 };
 
-class ItemWoodenSword: public Item
+class LootItem: public Item
 {
     public:
-        ItemWoodenSword();
+        StatSet stats;
 };
 
-class ItemStone: public Item
+class MaterialItem: public Item
 {
     public:
-        ItemStone();
+        int stackSize;
+};
+
+class BlockItem: public MaterialItem
+{
+    public:
+        // Example settings, likely to change
+        BlockDirection direction;
+        bool waterLogged;
+        bool hydrated;
 };
 
 #endif
