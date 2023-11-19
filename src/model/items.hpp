@@ -16,13 +16,6 @@ enum ItemRarity
     DIVINE
 };
 
-enum BlockDirection
-{
-    NORTH,
-    WEST,
-    SOUTH,
-    EAST
-};
 
 class Item
 {
@@ -47,11 +40,7 @@ class MaterialItem: public Item
 
 class BlockItem: public MaterialItem
 {
-    public:
-        // Example settings, likely to change
-        BlockDirection direction;
-        bool waterLogged;
-        bool hydrated;
+    // Differences to be added
 };
 
 #endif
