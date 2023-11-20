@@ -13,6 +13,7 @@ int main()
 
     quadtree->add(&dirt1);
     quadtree->add(&dirt2);
+    quadtree->merge(quadtree->mainNode->children[0].get());
     quadtree->debug();
 
     std::cout << std::endl;

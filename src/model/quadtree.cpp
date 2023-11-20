@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <cmath>
 
 #include "quadtree.hpp"
@@ -6,6 +7,18 @@
 void Node::setBounds(int top, int left)
 {
     bounds = Rect(top, left, pow(2, height), pow(2, height));
+}
+
+std::string Node::debug()
+{
+    std::stringstream debug;
+    
+    debug << "Node h" << height;
+    debug << " wh" << bounds.width;
+    if (block != std::experimental::nullopt)
+        debug << " block";
+
+    return debug.str();
 }
 
 Quadtree::Quadtree()
@@ -51,7 +64,9 @@ bool Quadtree::add(Block *block, Node *node)
         else
         {
             std::cout << "added block at " << block->rect.top << " " << block->rect.left << std::endl;
-            node->block = block;
+            node->block = std::make_unique<Block>(*block);
+
+            // TODO FIXME DID THIS WORK????????
 
             return true;
         }
@@ -63,6 +78,11 @@ bool Quadtree::add(Block *block, Node *node)
     }
 
     return true;
+}
+
+bool Quadtree::remove(Block *block, Node *node)
+{
+    
 }
 
 void Quadtree::split(Node *node)
@@ -104,6 +124,34 @@ void Quadtree::split(Node *node)
     }
 }
 
+void Quadtree::merge(Node *node)
+{
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    std::cout << "Merging " << node->debug() << std::endl;
+
+    for (auto& child : node->children)
+    {
+        if (child == NULL)
+        {
+            continue;
+        }
+        if (child->block != std::experimental::nullopt)
+        {
+            // FIXME
+            // delete child->block.value();
+            child->block = std::experimental::nullopt;
+            // child->block.reset();
+            // TODO WE NEED TO MAKE SURE TO GARBAGE COLLECT THE BLOCKS
+        }
+        merge(child.get());
+        child = NULL;
+    }
+}
+
 bool Quadtree::isLeaf(Node *node)
 {
     bool leaf = node->children[0] == nullptr;
@@ -122,11 +170,7 @@ void Quadtree::_debug(Node *node, int depth)
     if (node == nullptr)
         return;
 
-    std::cout << std::string(depth*4, ' ') << "Node h" << node->height;
-    std::cout << " wh" << node->bounds.width;
-    if (node->block != std::experimental::nullopt)
-        std::cout << " block";
-    std::cout << std::endl;
+    std::cout << std::string(depth*4, ' ') << node->debug() << std::endl;
 
     for (auto& child : node->children)
     {
