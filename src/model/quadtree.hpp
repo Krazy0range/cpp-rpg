@@ -29,15 +29,16 @@ public:
     void debug();
     void add(Block *block);
     void remove(Block *block);
-    void merge(Node *node);
-    std::unique_ptr<Node> mainNode;
 
 private:
 
+    std::unique_ptr<Node> mainNode;
     bool isLeaf(Node *node);
     void _debug(Node *node, int depth);
     bool add(Block *block, Node *node);
     bool remove(Block *block, Node *node);
+    bool merge(Node *node);
+    bool canMerge(Node *node);
     void split(Node *node);
 
 };

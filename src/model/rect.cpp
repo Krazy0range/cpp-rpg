@@ -51,3 +51,11 @@ std::string Rect::debug()
     debug << "" << top << " " << left << " " << width << " " << height;
     return debug.str();
 }
+
+bool Rect::operator==(Rect &other)
+{
+    return top == other.top
+        && left == other.left
+        && width == other.width
+        && height == other.height;
+}

@@ -17,8 +17,9 @@ struct Rect
     bool contains(Rect other);
     std::string debug();
 
-    Rect(int top, int left, int width, int height);
     Rect();
+    Rect(int top, int left, int width, int height);
+    bool operator==(Rect &other);
 };
 
 #endif

@@ -40,14 +40,9 @@ void Quadtree::remove(Block *block)
 
 bool Quadtree::add(Block *block, Node *node)
 {
-    // std::cout << "Okay, so we're dealing with:";
-    // std::cout << "\ta block at: " << block->rect.debug();
-    // std::cout << "\ta node at: " << node->bounds.debug();
-    // std::cout << std::endl;
 
     if (node->bounds.contains(block->rect))
     {
-        // std::cout << "we are within bounds!" << std::endl;
         if (node->height != 0)
         {
             if (isLeaf(node))
@@ -63,17 +58,13 @@ bool Quadtree::add(Block *block, Node *node)
         }
         else
         {
-            std::cout << "added block at " << block->rect.top << " " << block->rect.left << std::endl;
             node->block = std::make_unique<Block>(*block);
-
-            // TODO FIXME DID THIS WORK????????
 
             return true;
         }
     }
     else
     {
-        // std::cout << "we are without bounds!" << std::endl;
         return false;
     }
 
@@ -82,7 +73,39 @@ bool Quadtree::add(Block *block, Node *node)
 
 bool Quadtree::remove(Block *block, Node *node)
 {
-    
+    if (node == nullptr)
+    {
+        return false;
+    }
+
+    if (!isLeaf(node))
+    {
+        for (auto& child : node->children)
+        {
+            if (child->bounds.contains(block->rect))
+            {
+                if (remove(block, child.get()))
+                {
+                    merge(node);
+                    return true;
+                }
+            }
+        }
+    }
+    else
+    {
+        if (isLeaf(node) && node->block != std::experimental::nullopt)
+        {
+            if (node->block.value().get()->rect == block->rect)
+            {
+                node->block.value().reset();
+                node->block = std::experimental::nullopt;
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void Quadtree::split(Node *node)
@@ -124,32 +147,57 @@ void Quadtree::split(Node *node)
     }
 }
 
-void Quadtree::merge(Node *node)
+bool Quadtree::merge(Node *node)
 {
     if (node == nullptr)
     {
-        return;
+        return true;
     }
 
-    std::cout << "Merging " << node->debug() << std::endl;
 
-    for (auto& child : node->children)
+    if (canMerge(node))
     {
-        if (child == NULL)
+        for (auto& child : node->children)
         {
-            continue;
+            child.reset();
         }
-        if (child->block != std::experimental::nullopt)
-        {
-            // FIXME
-            // delete child->block.value();
-            child->block = std::experimental::nullopt;
-            // child->block.reset();
-            // TODO WE NEED TO MAKE SURE TO GARBAGE COLLECT THE BLOCKS
-        }
-        merge(child.get());
-        child = NULL;
+        return true;
     }
+
+    return false;
+}
+
+bool Quadtree::canMerge(Node *node)
+{
+    if (node == nullptr)
+    {
+        return true;
+    }
+
+    if (isLeaf(node))
+    {
+        if (node->block == std::experimental::nullopt)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        for (auto& child : node->children)
+        {
+            if (!canMerge(child.get()))
+            {
+                return false;
+            }
+        }
+    }
+
+
+    return true;
 }
 
 bool Quadtree::isLeaf(Node *node)
