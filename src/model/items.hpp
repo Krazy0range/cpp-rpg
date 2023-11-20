@@ -16,7 +16,6 @@ enum ItemRarity
     DIVINE
 };
 
-
 class Item
 {
     public:
