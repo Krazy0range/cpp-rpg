@@ -108,6 +108,39 @@ bool Quadtree::remove(Block *block, Node *node)
     return false;
 }
 
+Node *Quadtree::query(Block *block)
+{
+    return query(block, mainNode.get());
+}
+
+Node *Quadtree::query(Block *block, Node *node)
+{
+    if (node == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (isLeaf(node) && node->block != std::experimental::nullopt)
+    {
+        if (node->block.value().get()->rect == block->rect)
+        {
+            return node;
+        }
+    }
+
+    Node *found = nullptr;
+    for (auto& child : node->children)
+    {
+        found = query(block, child.get());
+        if (node) 
+        {
+            return found;
+        }
+    }
+
+    return found;
+}
+
 void Quadtree::split(Node *node)
 {
     if (node == nullptr)

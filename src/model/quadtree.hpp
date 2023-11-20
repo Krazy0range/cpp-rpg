@@ -29,6 +29,7 @@ public:
     void debug();
     void add(Block *block);
     void remove(Block *block);
+    Node *query(Block *block);
 
 private:
 
@@ -37,6 +38,7 @@ private:
     void _debug(Node *node, int depth);
     bool add(Block *block, Node *node);
     bool remove(Block *block, Node *node);
+    Node *query(Block *block, Node *node);
     bool merge(Node *node);
     bool canMerge(Node *node);
     void split(Node *node);
