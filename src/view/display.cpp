@@ -17,7 +17,52 @@ Display::Display()
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    textureManager = new TextureManager(renderer);
+    cobble = IMG_LoadTexture(renderer, "res/textures/blocks/cobblestone.bmp");
+    std::cout << cobble << std::endl;
+    
 }
+
+Display::~Display()
+{
+    delete textureManager;
+    textureManager = NULL;
+
+    SDL_DestroyTexture(cobble);
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
+void Display::Render()
+{
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    // int mouseX;
+    // int mouseY;
+    // SDL_GetMouseState(&mouseX, &mouseY);
+
+    // SDL_Rect rect;
+    // rect.x = 0;
+    // rect.y = 0;
+    // rect.w = mouseX;
+    // rect.h = mouseY;
+    // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    // SDL_RenderFillRect(renderer, &rect);
+
+    SDL_Rect cobbleRect;
+    cobbleRect.x = 0;
+    cobbleRect.y = 0;
+    cobbleRect.w = 64;
+    cobbleRect.h = 64;
+    SDL_RenderCopy(renderer, cobble, NULL, &cobbleRect);
+
+    SDL_RenderPresent(renderer);
+}
+
 
 std::vector<SDL_Event> Display::GetEvents()
 {
@@ -30,31 +75,4 @@ std::vector<SDL_Event> Display::GetEvents()
     }
 
     return events;
-}
-
-void Display::Render()
-{
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    int mouseX;
-    int mouseY;
-    SDL_GetMouseState(&mouseX, &mouseY);
-
-    SDL_Rect rect;
-    rect.x = 0;
-    rect.y = 0;
-    rect.w = mouseX;
-    rect.h = mouseY;
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &rect);
-
-    SDL_RenderPresent(renderer);
-}
-
-Display::~Display()
-{
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 }

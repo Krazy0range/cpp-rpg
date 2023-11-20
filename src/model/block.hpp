@@ -1,23 +1,14 @@
-#ifndef blocks_hpp
-#define blocks_hpp
+#ifndef block_hpp
+#define block_hpp
 
-#include "items.hpp"
+#include "item.hpp"
 #include "rect.hpp"
-
-enum BlockDirection
-{
-    NORTH,
-    WEST,
-    SOUTH,
-    EAST
-};
 
 struct Block
 {
     Block(int x, int y);
     Rect rect;
     BlockItem block;
-    BlockDirection direction;
 };
 
 #endif

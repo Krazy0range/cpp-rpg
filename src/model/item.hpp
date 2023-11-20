@@ -1,5 +1,5 @@
-#ifndef items_hpp
-#define items_hpp
+#ifndef item_hpp
+#define item_hpp
 
 #include <string>
 
@@ -19,27 +19,28 @@ enum ItemRarity
 class Item
 {
     public:
-        std::string name;
-        std::string lore;
-        std::string texture;
-        ItemRarity rarity;
+        static const std::string name;
+        static const std::string lore;
+        static const std::string texture;
+        static const ItemRarity rarity;
 };
 
 class LootItem: public Item
 {
     public:
-        StatSet stats;
+        static const StatSet stats;
 };
 
 class MaterialItem: public Item
 {
     public:
-        int stackSize;
+        static const int stackSize;
 };
 
 class BlockItem: public MaterialItem
 {
-    // Differences to be added
+    public:
+        static const int textureCacheId;
 };
 
 #endif

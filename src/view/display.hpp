@@ -5,6 +5,8 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 
+#include "texturemanager.hpp"
+
 class Display
 {
     public:
@@ -15,6 +17,8 @@ class Display
     private:
         SDL_Window *window;
         SDL_Renderer *renderer;
+        TextureManager *textureManager;
+        SDL_Texture *cobble;
 };
 
 #endif
