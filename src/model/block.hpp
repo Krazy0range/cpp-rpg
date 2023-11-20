@@ -2,6 +2,7 @@
 #define blocks_hpp
 
 #include "items.hpp"
+#include "rect.hpp"
 
 enum BlockDirection
 {
@@ -11,13 +12,12 @@ enum BlockDirection
     EAST
 };
 
-class Block
+struct Block
 {
-    private:
-        int x;
-        int y;
-        BlockItem block;
-        BlockDirection direction;
+    Block(int x, int y);
+    Rect rect;
+    BlockItem block;
+    BlockDirection direction;
 };
 
 #endif
