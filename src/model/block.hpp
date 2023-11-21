@@ -6,7 +6,14 @@
 
 struct Block
 {
-    Block(int x, int y);
+    Block(
+        const int x,
+        const int y,
+        const BlockItem block
+    ) :
+        rect(x, y, 1, 1),
+        block(block)
+    {};
     Rect rect;
     BlockItem block;
 };
