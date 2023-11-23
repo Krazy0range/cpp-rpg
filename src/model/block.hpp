@@ -14,6 +14,7 @@ struct Block
         rect(x, y, 1, 1),
         blockItem(blockItem)
     {};
+    
     Rect rect;
     const BlockItem *blockItem;
 };

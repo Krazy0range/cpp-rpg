@@ -6,6 +6,7 @@
 #include <map>
 
 #include "item.hpp"
+#include "chunk.hpp"
 
 class TextureManager
 {
@@ -15,14 +16,19 @@ public:
     ~TextureManager();
     SDL_Texture *loadTexture(const std::string path);
     SDL_Texture *getCachedBlockTexture(const BlockItem *blockItem);
+    SDL_Texture *getCachedChunkTexture(const Chunk *chunk);
     void debugBlockTextureCache();
+    void debugChunkTextureCache();
 
 private:
     SDL_Renderer *renderer;
     std::map<int, SDL_Texture *> blockTextureCache;
-    void cacheTextures();
-    void cacheTexture(const BlockItem *blockItem);
+    std::map<int, SDL_Texture *> chunkTextureCache;
+    void cacheBlockTextures();
+    void cacheBlockTexture(const BlockItem *blockItem);
     void freeBlockTextureCache();
+    void cacheChunkTexture(const Chunk *chunk);
+    void freeChunkTextureCache();
 
 };
 

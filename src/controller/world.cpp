@@ -7,19 +7,23 @@
 World::World()
 {
     initializeBlocks();
+    initializeChunks();
 }
 
 World::~World()
 {
     deinitializeBlocks();
+    deinitializeChunks();
 }
 
+/*
+    Initialize blocks.
+*/
 void World::initializeBlocks()
 {
     srand(time(NULL));
     
     blocks = new std::array<std::array<Block *, worldWidth>, worldHeight>();
-    std::cout << sizeof(*blocks) << std::endl;
 
     for (int y = 0; y < worldHeight; y++)
     {
@@ -35,6 +39,9 @@ void World::initializeBlocks()
     waveFunctionCollapse(x1, y1);
 }
 
+/*
+    Deinitialize blocks.
+*/
 void World::deinitializeBlocks()
 {
     for (int x = 0; x < worldWidth; x++)
@@ -45,11 +52,13 @@ void World::deinitializeBlocks()
             (*blocks)[x][y] = NULL;
         }
     }
+
+    delete blocks;
+    blocks = NULL;
 }
 
 /*
-    World::waveFunctionCollapse
-        An implementation of part of the Wave Function Collapse algorithm
+    An implementation of part of the Wave Function Collapse algorithm.
 */
 void World::waveFunctionCollapse(const int x, const int y)
 {
@@ -74,8 +83,8 @@ void World::waveFunctionCollapse(const int x, const int y)
         // If touching cobblestone and not grass,
         // then both cobblestone and dirt are valid.
         // Make cobblestone slightly more likely.
-        const int n = randomInt(0, 3);
-        if (n >= 1) // 2/3 chance
+        const int n = randomInt(0, 5);
+        if (n >= 1)
             setWorldBlock(x, y, BlockItemCatalog::cobblestone);
         else
             setWorldBlock(x, y, BlockItemCatalog::dirt);
@@ -85,8 +94,8 @@ void World::waveFunctionCollapse(const int x, const int y)
         // If touching grass and not cobblestone,
         // then both grass and dirt are valid.
         // Make grass slightly more likely.
-        const int n = randomInt(0, 3);
-        if (n >= 1) // 2/3 chance
+        const int n = randomInt(0, 5);
+        if (n >= 1)
             setWorldBlock(x, y, BlockItemCatalog::grass);
         else
             setWorldBlock(x, y, BlockItemCatalog::dirt);
@@ -98,15 +107,14 @@ void World::waveFunctionCollapse(const int x, const int y)
         setWorldBlock(x, y, BlockItemCatalog::dirt);
     }
 
-    waveFunctionCollapse(x - 1, y);
     waveFunctionCollapse(x + 1, y);
-    waveFunctionCollapse(x, y - 1);
+    waveFunctionCollapse(x - 1, y);
     waveFunctionCollapse(x, y + 1);
+    waveFunctionCollapse(x, y - 1);
 }
 
 /*
-    World::setWorldBlock
-        Sets a specific block
+    Sets a specific block.
 */
 void World::setWorldBlock(const int x, const int y, const BlockItem *blockItem)
 {
@@ -114,8 +122,7 @@ void World::setWorldBlock(const int x, const int y, const BlockItem *blockItem)
 }
 
 /*
-    World::checkNeighborsFor
-        Checks that a block is touching a specific BlockItem
+    Checks that a block is touching a specific BlockItem.
 */
 bool World::checkNeighborsFor(const int x, const int y, const BlockItem *blockItem)
 {
@@ -129,8 +136,7 @@ bool World::checkNeighborsFor(const int x, const int y, const BlockItem *blockIt
 }
 
 /*
-    World::checkNeighborsForExclusive
-        Checks that a block is only touching a specific BlockItem
+    Checks that a block is only touching a specific BlockItem.
 */
 bool World::checkNeighborsForExclusive(const int x, const int y, const BlockItem *blockItem)
 {
@@ -144,8 +150,7 @@ bool World::checkNeighborsForExclusive(const int x, const int y, const BlockItem
 }
 
 /*
-    World::checkNeighborsForExclusivePhysical
-        Checks that a block is only touching either a specific BlockItem or air
+    Checks that a block is only touching either a specific BlockItem or air.
 */
 bool World::checkNeighborsForExclusivePhysical(const int x, const int y, const BlockItem *blockItem)
 {
@@ -159,8 +164,7 @@ bool World::checkNeighborsForExclusivePhysical(const int x, const int y, const B
 }
 
 /*
-    World::getWorldBlock
-        Retrieve a Block at a specific location
+    Retrieve a Block at a specific location.
 */
 const Block *World::getWorldBlock(const int x, const int y)
 {
@@ -176,8 +180,7 @@ const Block *World::getWorldBlock(const int x, const int y)
 }
 
 /*
-    World::isValidBlockPosition
-        Check that a position is within world bounds
+    Check that a position is within world bounds.
 */
 bool World::isValidBlockPosition(const int x, const int y)
 {
@@ -191,8 +194,7 @@ bool World::isValidBlockPosition(const int x, const int y)
 }
 
 /*
-    World::randomBlockItem
-        Return a random BlockItem, including air
+    Return a random BlockItem, including air.
 */
 const BlockItem *World::randomBlockItem()
 {
@@ -221,8 +223,7 @@ const BlockItem *World::randomBlockItem()
 }
 
 /*
-    World::randomBlockItemPhysical
-        Return a random BlockItem, excluding air
+    Return a random BlockItem, excluding air.
 */
 const BlockItem *World::randomBlockItemPhysical()
 {
@@ -248,8 +249,7 @@ const BlockItem *World::randomBlockItemPhysical()
 }
 
 /*
-    World::randomInt
-        Return a random integer, lower bound inclusive, upper exclusive
+    Return a random integer, lower bound inclusive, upper exclusive.
 */
 int World::randomInt(const int x, const int y)
 {
@@ -257,11 +257,73 @@ int World::randomInt(const int x, const int y)
 }
 
 /*
-    World::randomBool
-        Return a random boolean
+    Return a random boolean.
 */
 bool World::randomBool()
 {
     return rand() % 2 == 0;
 }
 
+/*
+    Initialize chunks from the initialized blocks.
+*/
+void World::initializeChunks()
+{
+    chunks = new std::array<std::array<Chunk *, worldChunkWidth>, worldChunkHeight>;
+
+    int chunkTextureCacheIdTracker = 0;
+
+    for (int x = 0; x < worldWidth; x += chunkSize)
+    {
+        for (int y = 0; y < worldHeight; y += chunkSize)
+        {
+            std::array<std::array<Block *, chunkSize>, chunkSize> chunkBlocks;
+            chunkBlocks = copyChunkBlocks(x, y);
+            (*chunks)[y/chunkSize][x/chunkSize] = new Chunk(Rect(x, y, chunkSize, chunkSize), chunkTextureCacheIdTracker);
+            chunkTextureCacheIdTracker++;
+
+            // DEBUG
+            std::cout << chunkBlocks[0][0]->blockItem->texture << std::endl;
+            std::cout << chunkBlocks[0][1]->blockItem->texture << std::endl;
+            std::cout << chunkBlocks[0][2]->blockItem->texture << std::endl;
+
+            break;
+        }
+        break;
+    }
+
+}
+
+/*
+    Deinitialize chunks.
+*/
+void World::deinitializeChunks()
+{
+    for (int x = 0; x < worldChunkWidth; x++)
+    {
+        for (int y = 0; y < worldChunkHeight; y++)
+        {
+            delete (*chunks)[y][x];
+            (*chunks)[y][x] = NULL;
+        }
+    }
+
+    delete chunks;
+    chunks = NULL;
+}
+
+/*
+    Copy a 2D rectangle from the blocks array.
+*/
+std::array<std::array<Block *, chunkSize>, chunkSize> World::copyChunkBlocks(const int x, const int y)
+{
+    std::array<std::array<Block *, chunkSize>, chunkSize> chunkBlocks;
+    for (int _x = 0; _x < chunkSize; _x++)
+    {
+        for (int _y = 0; _y < chunkSize; _y++)
+        {
+            chunkBlocks[_x][_y] = (*blocks)[_y+y][_x+x];
+        }
+    }
+    return chunkBlocks;
+}

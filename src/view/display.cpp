@@ -49,18 +49,6 @@ void Display::render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    int mouseX;
-    int mouseY;
-    SDL_GetMouseState(&mouseX, &mouseY);
-
-    // SDL_Rect rect;
-    // rect.x = 0;
-    // rect.y = 0;
-    // rect.w = mouseX;
-    // rect.h = mouseY;
-    // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    // SDL_RenderFillRect(renderer, &rect);
-
     const int blockSize = 16;
 
     SDL_Texture *texture = textureManager->getCachedBlockTexture(BlockItemCatalog::dirt);
@@ -69,16 +57,6 @@ void Display::render()
     blockRect.y = 0;
     blockRect.w = blockSize;
     blockRect.h = blockSize;
-    
-    // for (int x = 0; x < 10; x++)
-    // {
-    //     for (int y = 0; y < 10; y++)
-    //     {
-    //         blockRect.x = x * 64;
-    //         blockRect.y = y * 64;
-    //         SDL_RenderCopy(renderer, block, NULL, &blockRect);
-    //     }
-    // }
 
     for (auto& row : *(world->blocks))
     {

@@ -9,7 +9,7 @@ TextureManager::TextureManager(SDL_Renderer *_renderer)
 {
     renderer = _renderer;
 
-    cacheTextures();
+    cacheBlockTextures();
 }
 
 TextureManager::~TextureManager()
@@ -17,6 +17,9 @@ TextureManager::~TextureManager()
     freeBlockTextureCache();
 }
 
+/*
+    Load a texture in the res/textures/ folder.
+*/
 SDL_Texture *TextureManager::loadTexture(const std::string path)
 {
     std::string base = SDL_GetBasePath();
@@ -26,26 +29,56 @@ SDL_Texture *TextureManager::loadTexture(const std::string path)
     return texture;
 }
 
-void TextureManager::cacheTextures()
-{
-    cacheTexture(BlockItemCatalog::air);
-    cacheTexture(BlockItemCatalog::dirt);
-    cacheTexture(BlockItemCatalog::cobblestone);
-    cacheTexture(BlockItemCatalog::grass);
-}
-
-void TextureManager::cacheTexture(const BlockItem *blockItem)
-{
-    SDL_Texture *texture = loadTexture(blockItem->texture);
-    blockTextureCache[blockItem->textureCacheId] = texture;
-}
-
+/*
+    Retrieve a cached block texture.
+*/
 SDL_Texture *TextureManager::getCachedBlockTexture(const BlockItem *blockItem)
 {
     SDL_Texture *texture = blockTextureCache[blockItem->textureCacheId];
     return texture;
 }
 
+/*
+    Retrieve a cached chunk texture.
+*/
+SDL_Texture *TextureManager::getCachedChunkTexture(const Chunk *chunk)
+{
+    SDL_Texture *texture = chunkTextureCache[chunk->textureCacheId];
+    return texture;
+}
+
+/*
+    Caches the texture for each block in the game.
+*/
+void TextureManager::cacheBlockTextures()
+{
+    cacheBlockTexture(BlockItemCatalog::air);
+    cacheBlockTexture(BlockItemCatalog::dirt);
+    cacheBlockTexture(BlockItemCatalog::cobblestone);
+    cacheBlockTexture(BlockItemCatalog::grass);
+}
+
+/*
+    Cache the texture for a single BlockItem.
+*/
+void TextureManager::cacheBlockTexture(const BlockItem *blockItem)
+{
+    SDL_Texture *texture = loadTexture(blockItem->texture);
+    blockTextureCache[blockItem->textureCacheId] = texture;
+}
+
+/*
+    Renders a chunk and caches its texture.
+*/
+void TextureManager::cacheChunkTexture(const Chunk *chunk)
+{
+    SDL_Texture *texture; // TODO === === === TODO === === === TODO
+    chunkTextureCache[chunk->textureCacheId] = texture;
+}
+
+/*
+    Frees all cached block textures.
+*/
 void TextureManager::freeBlockTextureCache()
 {
     for (auto const& [id, texture] : blockTextureCache)
@@ -54,9 +87,34 @@ void TextureManager::freeBlockTextureCache()
     }
 }
 
+/*
+    Frees all cached chunk textures.
+*/
+void TextureManager::freeChunkTextureCache()
+{
+    for (auto const& [id, texture] : chunkTextureCache)
+    {
+        SDL_DestroyTexture(texture);
+    }
+}
+
+/*
+    Debugs the block texture cache.
+*/
 void TextureManager::debugBlockTextureCache()
 {
     for (auto const& [id, texture] : blockTextureCache)
+    {
+        std::cout << id << " " << texture << std::endl;
+    }
+}
+
+/*
+    Debugs the chunk texture cache.
+*/
+void TextureManager::debugChunkTextureCache()
+{
+    for (auto const& [id, texture] : chunkTextureCache)
     {
         std::cout << id << " " << texture << std::endl;
     }
