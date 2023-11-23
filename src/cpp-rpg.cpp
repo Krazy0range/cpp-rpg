@@ -6,7 +6,7 @@ int main(int argv, char** args)
 {
     Main *main = new Main();
  
-    main->Loop();
+    main->loop();
 
     delete main;
 

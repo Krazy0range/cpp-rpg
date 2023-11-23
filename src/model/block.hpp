@@ -9,13 +9,13 @@ struct Block
     Block(
         const int x,
         const int y,
-        const BlockItem block
+        const BlockItem *blockItem
     ) :
         rect(x, y, 1, 1),
-        block(block)
+        blockItem(blockItem)
     {};
     Rect rect;
-    BlockItem block;
+    const BlockItem *blockItem;
 };
 
 #endif

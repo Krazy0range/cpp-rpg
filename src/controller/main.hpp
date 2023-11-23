@@ -3,25 +3,31 @@
 
 #include "world.hpp"
 #include "display.hpp"
+#include "rect.hpp"
 
 class Main
 {
     public:
         Main();
         ~Main();
-        void Loop();
+        void loop();
     private:
-        void Render();
-        void Update();
-        void InitModel();
-        void InitView();
-        void InitController();
-        void DeinitModel();
-        void DeinitView();
-        void DeinitController();
-        World *world;
-        Display *display;
+        void render();
+        void update();
+        void initModel();
+        void initView();
+        void initController();
+        void deinitModel();
+        void deinitView();
+        void deinitController();
+        void handleKeystate();
+        void handleEvents();
+        void handleKeystroke(SDL_Event *event);
         bool done;
+        World *world;
+        Rect *camera;
+        Display *display;
+        int cameraSpeed;
 };
 
 #endif

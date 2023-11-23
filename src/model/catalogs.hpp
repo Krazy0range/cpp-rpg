@@ -15,7 +15,12 @@ class MaterialItemCatalog
 
 class BlockItemCatalog
 {
+
+public:
+    static const BlockItem *air;
+    static const BlockItem *dirt;
     static const BlockItem *cobblestone;
+    static const BlockItem *grass;
 };
 
 #endif

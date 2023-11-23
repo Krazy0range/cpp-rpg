@@ -2,23 +2,93 @@
 
 #include "main.hpp"
 
-void Main::Loop()
+const int WIDTH = 1200, HEIGHT = 900;
+
+/* 
+    INITIALIZATION 
+*/
+
+Main::Main()
+{
+    std::cout << std::endl;
+
+    initModel();
+    initView();
+    initController();
+
+    std::cout << "Initialization completed" << std::endl;
+}
+
+void Main::initModel()
+{
+    std::cout << "\x1b[2mInitializing model...\x1b[0m" << std::endl;
+
+    world = new World();
+    camera = new Rect(0, 0, WIDTH, HEIGHT);
+    cameraSpeed = 5;
+}
+
+void Main::initView()
+{
+    std::cout << "\x1b[2mInitializing view...\x1b[0m" << std::endl;
+
+    const Rect windowDimensions(0, 0, WIDTH, HEIGHT);
+    display = new Display(windowDimensions, camera, world);
+}
+
+void Main::initController()
+{
+    std::cout << "\x1b[2mInitializing controller...\x1b[0m" << std::endl;
+}
+
+/* 
+    MAINLOOP 
+*/
+
+void Main::loop()
 {
     std::cout << "Main Loop started" << std::endl;
 
     done = false;
     while (!done)
     {
-        Update();
-        Render();
+        update();
+        render();
     }
 
     std::cout << "Main Loop finished" << std::endl;
 }
 
-void Main::Update()
+void Main::update()
 {
-    std::vector<SDL_Event> events = display->GetEvents();
+    handleKeystate();
+    handleEvents();
+}
+
+void Main::render()
+{
+    display->render();
+}
+
+/* UPDATE */
+
+void Main::handleKeystate()
+{
+    const Uint8 *keyState = SDL_GetKeyboardState(NULL);
+    
+    if (keyState[SDL_SCANCODE_UP])
+        camera->top -= cameraSpeed;
+    if (keyState[SDL_SCANCODE_DOWN])
+        camera->top += cameraSpeed;
+    if (keyState[SDL_SCANCODE_LEFT])
+        camera->left -= cameraSpeed;
+    if (keyState[SDL_SCANCODE_RIGHT])
+        camera->left += cameraSpeed;
+}
+
+void Main::handleEvents()
+{
+    std::vector<SDL_Event> events = display->getEvents();
     for (SDL_Event event : events)
     {
         if (event.type == SDL_QUIT)
@@ -28,75 +98,61 @@ void Main::Update()
 
         if (event.type == SDL_KEYDOWN)
         {
-            std::cout << (char)event.key.keysym.sym << std::endl;
+            handleKeystroke(&event);
         }
     }
 }
 
-void Main::Render()
+void Main::handleKeystroke(SDL_Event *event)
 {
-    display->Render();
+    if (event->type != SDL_KEYDOWN)
+    {
+        return;
+    }
+
+    switch (event->key.keysym.sym)
+    {
+        case SDLK_ESCAPE:
+            done = true;
+            break;
+        default:
+            break;
+    }
 }
 
-/* INITIALIZATION */
-
-Main::Main()
-{
-    std::cout << std::endl;
-
-    InitModel();
-    InitView();
-    InitController();
-
-    std::cout << "Initialization completed" << std::endl;
-}
-
-void Main::InitModel()
-{
-    world = new World();
-
-    std::cout << "\x1b[2mInitialized model\x1b[0m" << std::endl;
-}
-
-void Main::InitView()
-{
-    display = new Display();
-
-    std::cout << "\x1b[2mInitialized view\x1b[0m" << std::endl;
-}
-
-void Main::InitController()
-{
-    std::cout << "\x1b[2mInitialized controller\x1b[0m" << std::endl;
-}
-
-/* DEINITIALIZATION */
+/* 
+    DEINITIALIZATION 
+*/
 
 Main::~Main()
 {
-    DeinitModel();
-    DeinitView();
-    DeinitController();
+    deinitModel();
+    deinitView();
+    deinitController();
 
     std::cout << "Deinitialization completed" << std::endl;
     std::cout << std::endl;
 }
 
-void Main::DeinitModel()
+void Main::deinitModel()
 {
+    std::cout << "\x1b[2mDeinitializing model...\x1b[0m" << std::endl;
+
     delete world;
+    world = NULL;
 
-    std::cout << "\x1b[2mDeinitialized model\x1b[0m" << std::endl;
+    delete camera;
+    camera = NULL;
 }
 
-void Main::DeinitView()
+void Main::deinitView()
 {
+    std::cout << "\x1b[2mDeinitializing view...\x1b[0m" << std::endl;
+
     delete display;
-    
-    std::cout << "\x1b[2mDeinitialized view\x1b[0m" << std::endl;
 }
 
-void Main::DeinitController()
+void Main::deinitController()
 {
-    std::cout << "\x1b[2mDeinitialized controller\x1b[0m" << std::endl;
+    std::cout << "\x1b[2mDeinitializing controller...\x1b[0m" << std::endl;
 }

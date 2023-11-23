@@ -5,20 +5,26 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 
-#include "texturemanager.hpp"
+#include "texmanager.hpp"
+#include "rect.hpp"
+#include "world.hpp"
 
 class Display
 {
     public:
-        Display();
+        Display(const Rect windowDimensions, Rect *_camera, World *_world);
         ~Display();
-        std::vector<SDL_Event> GetEvents();
-        void Render();
+        std::vector<SDL_Event> getEvents();
+        void render();
     private:
         SDL_Window *window;
         SDL_Renderer *renderer;
         TextureManager *textureManager;
-        SDL_Texture *cobble;
+        Rect *camera;
+        World *world;
+        int frameStart;
+        int frameTime;
+        int frameDelay = 16;
 };
 
 #endif
