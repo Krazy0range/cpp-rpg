@@ -83,7 +83,7 @@ void World::waveFunctionCollapse(const int x, const int y)
         // If touching cobblestone and not grass,
         // then both cobblestone and dirt are valid.
         // Make cobblestone slightly more likely.
-        const int n = randomInt(0, 5);
+        const int n = randomInt(0, 2);
         if (n >= 1)
             setWorldBlock(x, y, BlockItemCatalog::cobblestone);
         else
@@ -94,7 +94,7 @@ void World::waveFunctionCollapse(const int x, const int y)
         // If touching grass and not cobblestone,
         // then both grass and dirt are valid.
         // Make grass slightly more likely.
-        const int n = randomInt(0, 5);
+        const int n = randomInt(0, 2);
         if (n >= 1)
             setWorldBlock(x, y, BlockItemCatalog::grass);
         else
@@ -129,7 +129,11 @@ bool World::checkNeighborsFor(const int x, const int y, const BlockItem *blockIt
     if (getWorldBlock(x - 1, y)->blockItem == blockItem
      || getWorldBlock(x + 1, y)->blockItem == blockItem
      || getWorldBlock(x, y - 1)->blockItem == blockItem
-     || getWorldBlock(x, y + 1)->blockItem == blockItem)
+     || getWorldBlock(x, y + 1)->blockItem == blockItem
+     || getWorldBlock(x - 1, y - 1)->blockItem == blockItem
+     || getWorldBlock(x + 1, y + 1)->blockItem == blockItem
+     || getWorldBlock(x + 1, y - 1)->blockItem == blockItem
+     || getWorldBlock(x - 1, y + 1)->blockItem == blockItem)
         return true;
     
     return false;
@@ -143,7 +147,11 @@ bool World::checkNeighborsForExclusive(const int x, const int y, const BlockItem
     if (getWorldBlock(x - 1, y)->blockItem != blockItem
      || getWorldBlock(x + 1, y)->blockItem != blockItem
      || getWorldBlock(x, y - 1)->blockItem != blockItem
-     || getWorldBlock(x, y + 1)->blockItem != blockItem)
+     || getWorldBlock(x, y + 1)->blockItem != blockItem
+     || getWorldBlock(x - 1, y - 1)->blockItem != blockItem
+     || getWorldBlock(x + 1, y + 1)->blockItem != blockItem
+     || getWorldBlock(x + 1, y - 1)->blockItem != blockItem
+     || getWorldBlock(x - 1, y + 1)->blockItem != blockItem)
         return false;
     
     return true;
@@ -157,7 +165,11 @@ bool World::checkNeighborsForExclusivePhysical(const int x, const int y, const B
     if ((getWorldBlock(x - 1, y)->blockItem != blockItem && getWorldBlock(x - 1, y)->blockItem != BlockItemCatalog::air)
      || (getWorldBlock(x + 1, y)->blockItem != blockItem && getWorldBlock(x + 1, y)->blockItem != BlockItemCatalog::air)
      || (getWorldBlock(x, y - 1)->blockItem != blockItem && getWorldBlock(x, y - 1)->blockItem != BlockItemCatalog::air)
-     || (getWorldBlock(x, y + 1)->blockItem != blockItem && getWorldBlock(x, y + 1)->blockItem != BlockItemCatalog::air))
+     || (getWorldBlock(x, y + 1)->blockItem != blockItem && getWorldBlock(x, y + 1)->blockItem != BlockItemCatalog::air)
+     || (getWorldBlock(x - 1, y - 1)->blockItem != blockItem && getWorldBlock(x - 1, y - 1)->blockItem != BlockItemCatalog::air)
+     || (getWorldBlock(x + 1, y + 1)->blockItem != blockItem && getWorldBlock(x + 1, y + 1)->blockItem != BlockItemCatalog::air)
+     || (getWorldBlock(x + 1, y - 1)->blockItem != blockItem && getWorldBlock(x + 1, y - 1)->blockItem != BlockItemCatalog::air)
+     || (getWorldBlock(x - 1, y + 1)->blockItem != blockItem && getWorldBlock(x - 1, y + 1)->blockItem != BlockItemCatalog::air))
         return false;
     
     return true;
