@@ -115,6 +115,9 @@ void Main::handleKeystroke(SDL_Event *event)
         case SDLK_ESCAPE:
             done = true;
             break;
+        case SDLK_r:
+            world->reinitializeBlocks();
+            break;
         default:
             break;
     }

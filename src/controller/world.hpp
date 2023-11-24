@@ -18,6 +18,7 @@ public:
     ~World();
     std::array<std::array<Block *, worldWidth>, worldHeight> *blocks;
     std::array<std::array<Chunk *, worldChunkWidth>, worldChunkHeight> *chunks;
+    void reinitializeBlocks();
 
 private:
 /*

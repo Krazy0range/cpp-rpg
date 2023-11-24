@@ -58,6 +58,27 @@ void World::deinitializeBlocks()
 }
 
 /*
+    Reinitialize blocks.
+*/
+void World::reinitializeBlocks()
+{
+    srand(time(NULL));
+
+    for (int y = 0; y < worldHeight; y++)
+    {
+        for (int x = 0; x < worldWidth; x++)
+        {
+            (*blocks)[y][x]->blockItem = BlockItemCatalog::air;
+        }
+    }
+
+    const int x1 = randomInt(0, worldWidth);
+    const int y1 = randomInt(0, worldHeight);
+
+    waveFunctionCollapse(x1, y1);
+}
+
+/*
     An implementation of part of the Wave Function Collapse algorithm.
 */
 void World::waveFunctionCollapse(const int x, const int y)
