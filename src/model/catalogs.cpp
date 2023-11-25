@@ -35,3 +35,12 @@ const BlockItem *BlockItemCatalog::grass = new BlockItem(
     BlockItem::MaxStackSize,
     3
 );
+
+const BlockItem *BlockItemCatalog::stone = new BlockItem(
+    LingualString("Stone"),
+    LingualString("A block of stone."),
+    "blocks/stone.bmp",
+    COMMON,
+    BlockItem::MaxStackSize,
+    4
+);

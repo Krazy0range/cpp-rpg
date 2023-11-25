@@ -27,7 +27,10 @@ private:
     void initializeBlocks();
     void deinitializeBlocks();
     void waveFunctionCollapse(const int x, const int y);
+    void removeAnnoyingDirt();
+    void generateStone();
     void setWorldBlock(const int x, const int y, const BlockItem *blockItem);
+    int countNeighborsFor(const int x, const int y, const BlockItem *blockItem);
     bool checkNeighborsFor(const int x, const int y, const BlockItem *blockItem);
     bool checkNeighborsForExclusive(const int x, const int y, const BlockItem *blockItem);
     bool checkNeighborsForExclusivePhysical(const int x, const int y, const BlockItem *blockItem);

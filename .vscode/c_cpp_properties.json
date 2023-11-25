@@ -3,7 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C:\\Program Files (x86)\\Visual Leak Detector\\include\\**",
+                "C:\\Program Files (x86)\\Visual Leak Detector\\lib\\**"
             ],
             "defines": [
                 "_DEBUG",

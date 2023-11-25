@@ -56,6 +56,7 @@ void TextureManager::cacheBlockTextures()
     cacheBlockTexture(BlockItemCatalog::dirt);
     cacheBlockTexture(BlockItemCatalog::cobblestone);
     cacheBlockTexture(BlockItemCatalog::grass);
+    cacheBlockTexture(BlockItemCatalog::stone);
 }
 
 /*

@@ -21,6 +21,7 @@ public:
     static const BlockItem *dirt;
     static const BlockItem *cobblestone;
     static const BlockItem *grass;
+    static const BlockItem *stone;
 };
 
 #endif

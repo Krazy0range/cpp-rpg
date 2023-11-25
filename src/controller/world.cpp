@@ -7,13 +7,13 @@
 World::World()
 {
     initializeBlocks();
-    initializeChunks();
+    // initializeChunks();
 }
 
 World::~World()
 {
     deinitializeBlocks();
-    deinitializeChunks();
+    // deinitializeChunks();
 }
 
 /*
@@ -37,6 +37,8 @@ void World::initializeBlocks()
     const int y1 = randomInt(0, worldHeight);
 
     waveFunctionCollapse(x1, y1);
+    removeAnnoyingDirt();
+    generateStone();
 }
 
 /*
@@ -62,20 +64,8 @@ void World::deinitializeBlocks()
 */
 void World::reinitializeBlocks()
 {
-    srand(time(NULL));
-
-    for (int y = 0; y < worldHeight; y++)
-    {
-        for (int x = 0; x < worldWidth; x++)
-        {
-            (*blocks)[y][x]->blockItem = BlockItemCatalog::air;
-        }
-    }
-
-    const int x1 = randomInt(0, worldWidth);
-    const int y1 = randomInt(0, worldHeight);
-
-    waveFunctionCollapse(x1, y1);
+    deinitializeBlocks();
+    initializeBlocks();
 }
 
 /*
@@ -104,8 +94,8 @@ void World::waveFunctionCollapse(const int x, const int y)
         // If touching cobblestone and not grass,
         // then both cobblestone and dirt are valid.
         // Make cobblestone slightly more likely.
-        const int n = randomInt(0, 2);
-        if (n >= 1)
+        const int n = randomInt(0, 20);
+        if (n >= 7)
             setWorldBlock(x, y, BlockItemCatalog::cobblestone);
         else
             setWorldBlock(x, y, BlockItemCatalog::dirt);
@@ -115,8 +105,8 @@ void World::waveFunctionCollapse(const int x, const int y)
         // If touching grass and not cobblestone,
         // then both grass and dirt are valid.
         // Make grass slightly more likely.
-        const int n = randomInt(0, 2);
-        if (n >= 1)
+        const int n = randomInt(0, 20);
+        if (n >= 7)
             setWorldBlock(x, y, BlockItemCatalog::grass);
         else
             setWorldBlock(x, y, BlockItemCatalog::dirt);
@@ -135,11 +125,85 @@ void World::waveFunctionCollapse(const int x, const int y)
 }
 
 /*
+    Remove isolated single dirt blocks.
+*/
+void World::removeAnnoyingDirt()
+{
+    for (int y = 0; y < worldHeight; y++)
+    {
+        for (int x = 0; x < worldWidth; x++)
+        {
+            if (getWorldBlock(x, y)->blockItem == BlockItemCatalog::dirt
+             && countNeighborsFor(x, y, BlockItemCatalog::dirt) <= 1)
+            {
+                if (checkNeighborsFor(x, y, BlockItemCatalog::stone))
+                {
+                    setWorldBlock(x, y, BlockItemCatalog::stone);
+                }
+                else if (checkNeighborsFor(x, y, BlockItemCatalog::cobblestone))
+                {
+                    setWorldBlock(x, y, BlockItemCatalog::cobblestone);
+                }
+                else if (checkNeighborsFor(x, y, BlockItemCatalog::grass))
+                {
+                    setWorldBlock(x, y, BlockItemCatalog::grass);
+                }
+            }
+        }
+    }
+}
+
+/*
+    Convert cobblestone to stone.
+*/
+void World::generateStone()
+{
+    for (int y = 0; y < worldHeight; y++)
+    {
+        for (int x = 0; x < worldWidth; x++)
+        {
+            if ((checkNeighborsFor(x, y, BlockItemCatalog::cobblestone) || checkNeighborsFor(x, y, BlockItemCatalog::stone))
+             && !checkNeighborsFor(x, y, BlockItemCatalog::dirt))
+            {
+                setWorldBlock(x, y, BlockItemCatalog::stone);
+            }
+        }
+    }
+}
+
+/*
     Sets a specific block.
 */
 void World::setWorldBlock(const int x, const int y, const BlockItem *blockItem)
 {
     (*blocks)[y][x]->blockItem = blockItem;
+}
+
+/*
+    Counts how many neighbors a block has of a specific BlockItem.
+*/
+int World::countNeighborsFor(const int x, const int y, const BlockItem *blockItem)
+{
+    int neighbors = 0;
+
+    if (getWorldBlock(x - 1, y)->blockItem == blockItem)
+        neighbors++;
+    if (getWorldBlock(x + 1, y)->blockItem == blockItem)
+        neighbors++;
+    if (getWorldBlock(x, y - 1)->blockItem == blockItem)
+        neighbors++;
+    if (getWorldBlock(x, y + 1)->blockItem == blockItem)
+        neighbors++;
+    if (getWorldBlock(x - 1, y - 1)->blockItem == blockItem)
+        neighbors++;
+    if (getWorldBlock(x + 1, y + 1)->blockItem == blockItem)
+        neighbors++;
+    if (getWorldBlock(x + 1, y - 1)->blockItem == blockItem)
+        neighbors++;
+    if (getWorldBlock(x - 1, y + 1)->blockItem == blockItem)
+        neighbors++;
+    
+    return neighbors;
 }
 
 /*

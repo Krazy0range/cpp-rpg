@@ -49,7 +49,7 @@ void Display::render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    const int blockSize = 16;
+    const int blockSize = 32;
 
     SDL_Texture *texture = textureManager->getCachedBlockTexture(BlockItemCatalog::dirt);
     SDL_Rect blockRect;

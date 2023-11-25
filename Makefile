@@ -1,5 +1,5 @@
 all:
-	g++ -o out src/cpp-rpg.cpp -std=c++17 -Wextra \
+	g++ -o out cpp-rpg.cpp -std=c++17 -Wextra \
 	-I ./include -L ./lib \
 	-I ./src/model -I ./src/view -I ./src/controller \
 	src/model/*.cpp src/view/*.cpp src/controller/*.cpp \
