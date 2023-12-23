@@ -16,7 +16,7 @@ Display::Display(const Rect windowDimensions, Rect *_camera, World *_world)
         return;
     }
 
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    // SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -58,10 +58,14 @@ void Display::render()
     blockRect.w = blockSize;
     blockRect.h = blockSize;
 
-    for (auto& row : *(world->blocks))
+    // for (auto& row : *(world->blocks))
+    for (int y = 0; y < worldHeight; y++)
     {
-        for (auto& block : row)
+        // for (auto& block : row)
+        for (int x = 0; x < worldWidth; x++)
         {
+            Block *block = world->blocks[y][x];
+
             blockRect.x = block->rect.left * blockSize - camera->left;
             blockRect.y = block->rect.top * blockSize - camera->top;
             texture = textureManager->getCachedBlockTexture(block->blockItem);
