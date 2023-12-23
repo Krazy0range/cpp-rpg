@@ -22,23 +22,35 @@ World::~World()
 void World::initializeBlocks()
 {
     srand(time(NULL));
+
+    invalidBlock = new Block(-1, -1, BlockItemCatalog::air);
     
-    blocks = new std::array<std::array<Block *, worldWidth>, worldHeight>();
+    // blocks = new std::array<std::array<Block *, worldWidth>, worldHeight>();
+    blocks = new Block **[worldHeight];
 
     for (int y = 0; y < worldHeight; y++)
     {
+
+        blocks[y] = new Block *[worldWidth];
+
         for (int x = 0; x < worldWidth; x++)
         {
-            (*blocks)[y][x] = new Block(x, y, BlockItemCatalog::air);
+            blocks[y][x] = new Block(x, y, BlockItemCatalog::stone);
         }
     }
 
-    const int x1 = randomInt(0, worldWidth);
-    const int y1 = randomInt(0, worldHeight);
+    std::cout << "Block ***blocks initialized" << std::endl;
 
-    waveFunctionCollapse(x1, y1);
-    removeAnnoyingDirt();
-    generateStone();
+    // const int x1 = randomInt(0, worldWidth);
+    // const int y1 = randomInt(0, worldHeight);
+
+    // recursedWaveFunctionCollapses = 0;
+    // waveFunctionCollapse(x1, y1);
+
+    // std::cout << "we have collapsed" << std::endl;
+
+    // removeAnnoyingDirt();
+    // generateStone();
 }
 
 /*
@@ -46,17 +58,19 @@ void World::initializeBlocks()
 */
 void World::deinitializeBlocks()
 {
-    for (int x = 0; x < worldWidth; x++)
+    delete invalidBlock;
+
+    for (int y = 0; y < worldHeight; y++)
     {
-        for (int y = 0; y < worldHeight; y++)
+        for (int x = 0; x < worldWidth; x++)
         {
-            delete (*blocks)[x][y];
-            (*blocks)[x][y] = NULL;
+            delete blocks[y][x];
         }
+
+        delete[] blocks[y];
     }
 
-    delete blocks;
-    blocks = NULL;
+    delete[] blocks;
 }
 
 /*
@@ -73,6 +87,9 @@ void World::reinitializeBlocks()
 */
 void World::waveFunctionCollapse(const int x, const int y)
 {
+    recursedWaveFunctionCollapses += 1;
+    std::cout << "Recursed Wave Function Collapses: " << recursedWaveFunctionCollapses << std::endl;
+
     if (!isValidBlockPosition(x, y))
     {
         return;
@@ -176,7 +193,8 @@ void World::generateStone()
 */
 void World::setWorldBlock(const int x, const int y, const BlockItem *blockItem)
 {
-    (*blocks)[y][x]->blockItem = blockItem;
+    // (*blocks)[y][x]->blockItem = blockItem;
+    blocks[y][x]->blockItem = blockItem;
 }
 
 /*
@@ -267,12 +285,12 @@ const Block *World::getWorldBlock(const int x, const int y)
 {
     if (isValidBlockPosition(x, y))
     {
-        return (*blocks)[y][x];
+        // return (*blocks)[y][x];
+        return blocks[y][x];
     }
     else
     {
-        const Block *invalid = new Block(x, y, BlockItemCatalog::air);
-        return invalid;
+        return invalidBlock;
     }
 }
 
@@ -364,63 +382,63 @@ bool World::randomBool()
 /*
     Initialize chunks from the initialized blocks.
 */
-void World::initializeChunks()
-{
-    chunks = new std::array<std::array<Chunk *, worldChunkWidth>, worldChunkHeight>;
+// void World::initializeChunks()
+// {
+//     chunks = new std::array<std::array<Chunk *, worldChunkWidth>, worldChunkHeight>;
 
-    int chunkTextureCacheIdTracker = 0;
+//     int chunkTextureCacheIdTracker = 0;
 
-    for (int x = 0; x < worldWidth; x += chunkSize)
-    {
-        for (int y = 0; y < worldHeight; y += chunkSize)
-        {
-            std::array<std::array<Block *, chunkSize>, chunkSize> chunkBlocks;
-            chunkBlocks = copyChunkBlocks(x, y);
-            (*chunks)[y/chunkSize][x/chunkSize] = new Chunk(Rect(x, y, chunkSize, chunkSize), chunkTextureCacheIdTracker);
-            chunkTextureCacheIdTracker++;
+//     for (int x = 0; x < worldWidth; x += chunkSize)
+//     {
+//         for (int y = 0; y < worldHeight; y += chunkSize)
+//         {
+//             std::array<std::array<Block *, chunkSize>, chunkSize> chunkBlocks;
+//             chunkBlocks = copyChunkBlocks(x, y);
+//             (*chunks)[y/chunkSize][x/chunkSize] = new Chunk(Rect(x, y, chunkSize, chunkSize), chunkTextureCacheIdTracker);
+//             chunkTextureCacheIdTracker++;
 
-            // DEBUG
-            std::cout << chunkBlocks[0][0]->blockItem->texture << std::endl;
-            std::cout << chunkBlocks[0][1]->blockItem->texture << std::endl;
-            std::cout << chunkBlocks[0][2]->blockItem->texture << std::endl;
+//             // DEBUG
+//             std::cout << chunkBlocks[0][0]->blockItem->texture << std::endl;
+//             std::cout << chunkBlocks[0][1]->blockItem->texture << std::endl;
+//             std::cout << chunkBlocks[0][2]->blockItem->texture << std::endl;
 
-            break;
-        }
-        break;
-    }
+//             break;
+//         }
+//         break;
+//     }
 
-}
+// }
 
-/*
-    Deinitialize chunks.
-*/
-void World::deinitializeChunks()
-{
-    for (int x = 0; x < worldChunkWidth; x++)
-    {
-        for (int y = 0; y < worldChunkHeight; y++)
-        {
-            delete (*chunks)[y][x];
-            (*chunks)[y][x] = NULL;
-        }
-    }
+// /*
+//     Deinitialize chunks.
+// */
+// void World::deinitializeChunks()
+// {
+//     for (int x = 0; x < worldChunkWidth; x++)
+//     {
+//         for (int y = 0; y < worldChunkHeight; y++)
+//         {
+//             delete (*chunks)[y][x];
+//             (*chunks)[y][x] = NULL;
+//         }
+//     }
 
-    delete chunks;
-    chunks = NULL;
-}
+//     delete chunks;
+//     chunks = NULL;
+// }
 
-/*
-    Copy a 2D rectangle from the blocks array.
-*/
-std::array<std::array<Block *, chunkSize>, chunkSize> World::copyChunkBlocks(const int x, const int y)
-{
-    std::array<std::array<Block *, chunkSize>, chunkSize> chunkBlocks;
-    for (int _x = 0; _x < chunkSize; _x++)
-    {
-        for (int _y = 0; _y < chunkSize; _y++)
-        {
-            chunkBlocks[_x][_y] = (*blocks)[_y+y][_x+x];
-        }
-    }
-    return chunkBlocks;
-}
+// /*
+//     Copy a 2D rectangle from the blocks array.
+// */
+// std::array<std::array<Block *, chunkSize>, chunkSize> World::copyChunkBlocks(const int x, const int y)
+// {
+//     std::array<std::array<Block *, chunkSize>, chunkSize> chunkBlocks;
+//     for (int _x = 0; _x < chunkSize; _x++)
+//     {
+//         for (int _y = 0; _y < chunkSize; _y++)
+//         {
+//             chunkBlocks[_x][_y] = (*blocks)[_y+y][_x+x];
+//         }
+//     }
+//     return chunkBlocks;
+// }

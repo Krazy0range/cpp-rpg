@@ -5,8 +5,8 @@
 #include "block.hpp"
 #include "chunk.hpp"
 
-const int worldWidth = 64;
-const int worldHeight = 64;
+const int worldWidth = 1024;
+const int worldHeight = 1024;
 const int worldChunkWidth = worldWidth / chunkSize;
 const int worldChunkHeight = worldHeight / chunkSize;
 
@@ -16,7 +16,8 @@ class World
 public:
     World();
     ~World();
-    std::array<std::array<Block *, worldWidth>, worldHeight> *blocks;
+    // std::array<std::array<Block *, worldWidth>, worldHeight> *blocks;
+    Block ***blocks;
     std::array<std::array<Chunk *, worldChunkWidth>, worldChunkHeight> *chunks;
     void reinitializeBlocks();
 
@@ -24,6 +25,9 @@ private:
 /*
     Blocks
 */
+    const int waveFunctionCollapseRecursionLimit = 48722;
+    int recursedWaveFunctionCollapses;
+    const Block *invalidBlock;
     void initializeBlocks();
     void deinitializeBlocks();
     void waveFunctionCollapse(const int x, const int y);
@@ -40,12 +44,12 @@ private:
     const BlockItem *randomBlockItemPhysical();
     int randomInt(const int x, const int y);
     bool randomBool();
-/*
-    Chunks
-*/
-    void initializeChunks();
-    void deinitializeChunks();
-    std::array<std::array<Block *, chunkSize>, chunkSize> copyChunkBlocks(const int x, const int y);
+// /*
+//     Chunks
+// */
+//     void initializeChunks();
+//     void deinitializeChunks();
+//     std::array<std::array<Block *, chunkSize>, chunkSize> copyChunkBlocks(const int x, const int y);
 };
 
 #endif
