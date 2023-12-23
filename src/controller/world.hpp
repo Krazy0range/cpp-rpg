@@ -5,8 +5,8 @@
 #include "block.hpp"
 #include "chunk.hpp"
 
-const int worldWidth = 64;
-const int worldHeight = 64;
+const int worldWidth = 1024;
+const int worldHeight = 1024;
 const int worldChunkWidth = worldWidth / chunkSize;
 const int worldChunkHeight = worldHeight / chunkSize;
 
