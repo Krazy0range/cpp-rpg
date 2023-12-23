@@ -5,8 +5,8 @@
 #include "block.hpp"
 #include "chunk.hpp"
 
-const int worldWidth = 1024;
-const int worldHeight = 1024;
+const int worldWidth = 64;
+const int worldHeight = 64;
 const int worldChunkWidth = worldWidth / chunkSize;
 const int worldChunkHeight = worldHeight / chunkSize;
 
@@ -30,14 +30,7 @@ private:
     const Block *invalidBlock;
     void initializeBlocks();
     void deinitializeBlocks();
-    void waveFunctionCollapse(const int x, const int y);
-    void removeAnnoyingDirt();
-    void generateStone();
     void setWorldBlock(const int x, const int y, const BlockItem *blockItem);
-    int countNeighborsFor(const int x, const int y, const BlockItem *blockItem);
-    bool checkNeighborsFor(const int x, const int y, const BlockItem *blockItem);
-    bool checkNeighborsForExclusive(const int x, const int y, const BlockItem *blockItem);
-    bool checkNeighborsForExclusivePhysical(const int x, const int y, const BlockItem *blockItem);
     const Block *getWorldBlock(const int x, const int y);
     bool isValidBlockPosition(const int x, const int y);
     const BlockItem *randomBlockItem();
