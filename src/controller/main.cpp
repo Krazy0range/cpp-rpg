@@ -4,6 +4,8 @@
 
 const int WIDTH = 1024, HEIGHT = 1024;
 
+const float playerSpeedModifier = 10;
+
 /*
     INITIALIZATION 
 */
@@ -30,9 +32,11 @@ void Main::initModel()
     player = new Player(
         LingualString("adm!n"),
         StatSet(),
-        Rect(0, 0, 16, 16)
+        Vectorf(0.0, 0.0)
     );
-    player->stats.speed.set(5);
+    player->stats.speed.set(1);
+    player->position.x = worldWidth / 2;
+    player->position.y = worldWidth / 2;
 }
 
 void Main::initView()
@@ -90,10 +94,14 @@ void Main::handleKeystate()
     if (keyState[SDL_SCANCODE_RIGHT]) camera->left += cameraSpeed;
 
     // Player movement
-    if (keyState[SDL_SCANCODE_W]) player->rect.top -= player->stats.speed.level;
-    if (keyState[SDL_SCANCODE_S]) player->rect.top += player->stats.speed.level;
-    if (keyState[SDL_SCANCODE_A]) player->rect.left -= player->stats.speed.level;
-    if (keyState[SDL_SCANCODE_D]) player->rect.left += player->stats.speed.level;
+    if (keyState[SDL_SCANCODE_W]) player->position.y -= player->stats.speed.level / playerSpeedModifier;
+    if (keyState[SDL_SCANCODE_S]) player->position.y += player->stats.speed.level / playerSpeedModifier;
+    if (keyState[SDL_SCANCODE_A]) player->position.x -= player->stats.speed.level / playerSpeedModifier;
+    if (keyState[SDL_SCANCODE_D]) player->position.x += player->stats.speed.level / playerSpeedModifier;
+
+    // Debug
+    if (keyState[SDL_SCANCODE_P])
+        std::cout << "\x1b[2mplayer pos: " << player->position.x << ' ' << player->position.y << std::endl;
 }
 
 void Main::handleEvents()

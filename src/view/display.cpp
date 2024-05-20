@@ -77,8 +77,8 @@ void Display::render()
     SDL_Texture *playerTexture = textureManager->getCachedPlayerTexture();
     SDL_Rect playerRect;
 
-    playerRect.x = player->rect.left - camera->left;
-    playerRect.y = player->rect.top - camera->top;
+    playerRect.x = player->position.x * blockSize - camera->left;
+    playerRect.y = player->position.y * blockSize - camera->top;
     playerRect.w = blockSize;
     playerRect.h = blockSize;
 

@@ -4,7 +4,7 @@
 #include <string>
 
 #include "lingual.hpp"
-#include "rect.hpp"
+#include "vector.hpp"
 #include "stats.hpp"
 
 class Player
@@ -13,16 +13,16 @@ class Player
         Player(
             LingualString name,
             StatSet stats,
-            Rect rect
+            Vectorf position
         ) :
             name(name),
             stats(stats),
-            rect(rect)
+            position(position)
         {};
 
         const LingualString name;
         StatSet stats;
-        Rect rect;
+        Vectorf position;
 };
 
 #endif
