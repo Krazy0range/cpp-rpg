@@ -2,9 +2,9 @@
 
 #include "main.hpp"
 
-const int WIDTH = 1200, HEIGHT = 900;
+const int WIDTH = 1024, HEIGHT = 1024;
 
-/* 
+/*
     INITIALIZATION 
 */
 
@@ -26,6 +26,13 @@ void Main::initModel()
     world = new World();
     camera = new Rect(0, 0, WIDTH, HEIGHT);
     cameraSpeed = 5;
+
+    player = new Player(
+        LingualString("adm!n"),
+        StatSet(),
+        Rect(0, 0, 16, 16)
+    );
+    player->stats.speed.set(5);
 }
 
 void Main::initView()
@@ -33,7 +40,7 @@ void Main::initView()
     std::cout << "\x1b[2mInitializing view...\x1b[0m" << std::endl;
 
     const Rect windowDimensions(0, 0, WIDTH, HEIGHT);
-    display = new Display(windowDimensions, camera, world);
+    display = new Display(windowDimensions, camera, world, player);
 }
 
 void Main::initController()
@@ -76,14 +83,17 @@ void Main::handleKeystate()
 {
     const Uint8 *keyState = SDL_GetKeyboardState(NULL);
     
-    if (keyState[SDL_SCANCODE_UP])
-        camera->top -= cameraSpeed;
-    if (keyState[SDL_SCANCODE_DOWN])
-        camera->top += cameraSpeed;
-    if (keyState[SDL_SCANCODE_LEFT])
-        camera->left -= cameraSpeed;
-    if (keyState[SDL_SCANCODE_RIGHT])
-        camera->left += cameraSpeed;
+    // Camera movement
+    if (keyState[SDL_SCANCODE_UP]) camera->top -= cameraSpeed;
+    if (keyState[SDL_SCANCODE_DOWN]) camera->top += cameraSpeed;
+    if (keyState[SDL_SCANCODE_LEFT]) camera->left -= cameraSpeed;
+    if (keyState[SDL_SCANCODE_RIGHT]) camera->left += cameraSpeed;
+
+    // Player movement
+    if (keyState[SDL_SCANCODE_W]) player->rect.top -= player->stats.speed.level;
+    if (keyState[SDL_SCANCODE_S]) player->rect.top += player->stats.speed.level;
+    if (keyState[SDL_SCANCODE_A]) player->rect.left -= player->stats.speed.level;
+    if (keyState[SDL_SCANCODE_D]) player->rect.left += player->stats.speed.level;
 }
 
 void Main::handleEvents()

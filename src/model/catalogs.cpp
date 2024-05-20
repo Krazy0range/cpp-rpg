@@ -18,13 +18,31 @@ const BlockItem *BlockItemCatalog::dirt = new BlockItem(
     1
 );
 
+const BlockItem *BlockItemCatalog::stone = new BlockItem(
+    LingualString("Stone"),
+    LingualString("A block of stone."),
+    "blocks/stone.bmp",
+    COMMON,
+    BlockItem::MaxStackSize,
+    2
+);
+
 const BlockItem *BlockItemCatalog::cobblestone = new BlockItem(
     LingualString("Cobblestone"),
     LingualString("A block of broken stone."),
     "blocks/cobblestone.bmp",
     COMMON,
     BlockItem::MaxStackSize,
-    2
+    3
+);
+
+const BlockItem *BlockItemCatalog::stoneBricks = new BlockItem(
+    LingualString("Stone Bricks"),
+    LingualString("Bricks of stone."),
+    "blocks/stonebricks.bmp",
+    COMMON,
+    BlockItem::MaxStackSize,
+    4
 );
 
 const BlockItem *BlockItemCatalog::grass = new BlockItem(
@@ -33,14 +51,14 @@ const BlockItem *BlockItemCatalog::grass = new BlockItem(
     "blocks/grass.bmp",
     COMMON,
     BlockItem::MaxStackSize,
-    3
+    5
 );
 
-const BlockItem *BlockItemCatalog::stone = new BlockItem(
-    LingualString("Stone"),
-    LingualString("A block of stone."),
-    "blocks/stone.bmp",
+const BlockItem *BlockItemCatalog::grass2 = new BlockItem(
+    LingualString("Grass"),
+    LingualString("A block of grass."),
+    "blocks/grass2.bmp",
     COMMON,
     BlockItem::MaxStackSize,
-    4
+    6
 );

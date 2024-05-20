@@ -4,6 +4,7 @@
 #include "world.hpp"
 #include "display.hpp"
 #include "rect.hpp"
+#include "player.hpp"
 
 class Main
 {
@@ -27,6 +28,7 @@ class Main
         World *world;
         Rect *camera;
         Display *display;
+        Player *player;
         int cameraSpeed;
 };
 

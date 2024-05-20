@@ -1,11 +1,17 @@
 #ifndef stat_hpp
 #define stat_hpp
 
+#include <algorithm>
+
 class Stat
 {
 
 public:
-    Stat() = default;
+    Stat() :
+        level(0),
+        min(0),
+        max(100)
+    {};
     Stat(
         int level,
         int min,
@@ -25,6 +31,9 @@ public:
     int level;
     int min;
     int max;
+
+    void set(int x) { level = std::min(std::max(x, min), max); }
+    int get() { return level; }
     
 };
 

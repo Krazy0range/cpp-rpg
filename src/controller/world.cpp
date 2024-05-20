@@ -1,6 +1,8 @@
 #include <time.h>
 #include <iostream>
 
+#include "FastNoiseLite.h"
+
 #include "world.hpp"
 #include "catalogs.hpp"
 
@@ -21,8 +23,6 @@ World::~World()
 */
 void World::initializeBlocks()
 {
-    srand(time(NULL));
-
     invalidBlock = new Block(-1, -1, BlockItemCatalog::air);
     
     // blocks = new std::array<std::array<Block *, worldWidth>, worldHeight>();
@@ -30,7 +30,6 @@ void World::initializeBlocks()
 
     for (int y = 0; y < worldHeight; y++)
     {
-
         blocks[y] = new Block *[worldWidth];
 
         for (int x = 0; x < worldWidth; x++)
@@ -39,18 +38,7 @@ void World::initializeBlocks()
         }
     }
 
-    std::cout << "Block ***blocks initialized" << std::endl;
-
-    // const int x1 = randomInt(0, worldWidth);
-    // const int y1 = randomInt(0, worldHeight);
-
-    // recursedWaveFunctionCollapses = 0;
-    // waveFunctionCollapse(x1, y1);
-
-    // std::cout << "we have collapsed" << std::endl;
-
-    // removeAnnoyingDirt();
-    // generateStone();
+    generateBlocks();
 }
 
 /*
@@ -78,8 +66,68 @@ void World::deinitializeBlocks()
 */
 void World::reinitializeBlocks()
 {
-    deinitializeBlocks();
-    initializeBlocks();
+    std::cout << "\x1b[2mRegenerating world...\x1b[0m" << std::endl;
+    generateBlocks();
+}
+
+/*
+    Generate blocks using noise.
+*/
+void World::generateBlocks()
+{
+    srand(time(NULL));
+    const int xOffset = rand();
+    const int yOffset = rand();
+    const int xOffset2 = rand();
+    const int yOffset2 = rand();
+
+    FastNoiseLite noise;
+    noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+
+    const float islandRadius = 12;
+    const float islandNoiseScale = 10;
+    const float grassNoiseScale = 30;
+
+    for (int y = 0; y < worldHeight; y++)
+    {
+        for (int x = 0; x < worldWidth; x++)
+        {
+            const float xDistance = abs(x - (worldWidth / 2));
+            const float yDistance = abs(y - (worldHeight / 2));
+            const float distance = sqrt(xDistance * xDistance + yDistance * yDistance);
+            const float slope = 1 - (distance / islandRadius);
+            const float islandNoiseValue = noise.GetNoise((x + xOffset) * islandNoiseScale, (y + yOffset) * islandNoiseScale) + slope * 5;
+            const float grassNoiseValue = noise.GetNoise((x + xOffset2) * grassNoiseScale, (y + yOffset2) * grassNoiseScale);
+
+            const BlockItem *blockItem;
+
+            if (islandNoiseValue < 0)
+            {
+                blockItem = BlockItemCatalog::air;
+            }
+            else if (islandNoiseValue > 1)
+            {
+                if (grassNoiseValue > 0.1)
+                {
+                    blockItem = BlockItemCatalog::grass;
+                }
+                else
+                {
+                    blockItem = BlockItemCatalog::grass2;
+                }
+            }
+            else if (grassNoiseValue > 0.1)
+            {
+                blockItem = BlockItemCatalog::dirt;
+            }
+            else
+            {
+                blockItem = BlockItemCatalog::cobblestone;
+            }
+
+            setWorldBlock(x, y, blockItem);
+        }
+    }
 }
 
 /*

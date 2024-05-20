@@ -5,8 +5,8 @@
 #include "block.hpp"
 #include "chunk.hpp"
 
-const int worldWidth = 64;
-const int worldHeight = 64;
+const int worldWidth = 50;
+const int worldHeight = 50;
 const int worldChunkWidth = worldWidth / chunkSize;
 const int worldChunkHeight = worldHeight / chunkSize;
 
@@ -25,11 +25,10 @@ private:
 /*
     Blocks
 */
-    const int waveFunctionCollapseRecursionLimit = 48722;
-    int recursedWaveFunctionCollapses;
     const Block *invalidBlock;
     void initializeBlocks();
     void deinitializeBlocks();
+    void generateBlocks();
     void setWorldBlock(const int x, const int y, const BlockItem *blockItem);
     const Block *getWorldBlock(const int x, const int y);
     bool isValidBlockPosition(const int x, const int y);

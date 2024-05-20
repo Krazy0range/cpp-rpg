@@ -3,12 +3,12 @@
 #include "display.hpp"
 #include "catalogs.hpp"
 
-Display::Display(const Rect windowDimensions, Rect *_camera, World *_world)
+Display::Display(const Rect windowDimensions, Rect *_camera, World *_world, Player *_player)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
     
-    window = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowDimensions.width, windowDimensions.height, SDL_WINDOW_ALLOW_HIGHDPI);
+    window = SDL_CreateWindow("cpp-rpg", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowDimensions.width, windowDimensions.height, SDL_WINDOW_ALLOW_HIGHDPI);
 
     if (window == NULL)
     {
@@ -30,6 +30,7 @@ Display::Display(const Rect windowDimensions, Rect *_camera, World *_world)
 
     camera = _camera;
     world = _world;
+    player = _player;
 }
 
 Display::~Display()
@@ -72,6 +73,16 @@ void Display::render()
             SDL_RenderCopy(renderer, texture, NULL, &blockRect);
         }
     }
+
+    SDL_Texture *playerTexture = textureManager->getCachedPlayerTexture();
+    SDL_Rect playerRect;
+
+    playerRect.x = player->rect.left - camera->left;
+    playerRect.y = player->rect.top - camera->top;
+    playerRect.w = blockSize;
+    playerRect.h = blockSize;
+
+    SDL_RenderCopy(renderer, playerTexture, NULL, &playerRect);
 
     SDL_RenderPresent(renderer);
 

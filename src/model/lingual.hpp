@@ -33,9 +33,9 @@ struct LingualString
         tokipona(nullptr)
     {};
 
-    std::string *english;
-    std::string *latin;
-    std::string *tokipona;
+    const std::string *english;
+    const std::string *latin;
+    const std::string *tokipona;
 };
 
 #endif

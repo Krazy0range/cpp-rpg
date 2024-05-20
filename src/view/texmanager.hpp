@@ -17,6 +17,7 @@ public:
     SDL_Texture *loadTexture(const std::string path);
     SDL_Texture *getCachedBlockTexture(const BlockItem *blockItem);
     SDL_Texture *getCachedChunkTexture(const Chunk *chunk);
+    SDL_Texture *getCachedPlayerTexture();
     void debugBlockTextureCache();
     void debugChunkTextureCache();
 
@@ -24,11 +25,13 @@ private:
     SDL_Renderer *renderer;
     std::map<int, SDL_Texture *> blockTextureCache;
     std::map<int, SDL_Texture *> chunkTextureCache;
+    SDL_Texture *playerTexture;
     void cacheBlockTextures();
     void cacheBlockTexture(const BlockItem *blockItem);
     void freeBlockTextureCache();
     void cacheChunkTexture(const Chunk *chunk);
     void freeChunkTextureCache();
+    void cachePlayerTexture(const std::string texture);
 
 };
 

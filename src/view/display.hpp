@@ -8,11 +8,12 @@
 #include "texmanager.hpp"
 #include "rect.hpp"
 #include "world.hpp"
+#include "player.hpp"
 
 class Display
 {
     public:
-        Display(const Rect windowDimensions, Rect *_camera, World *_world);
+        Display(const Rect windowDimensions, Rect *_camera, World *_world, Player *_player);
         ~Display();
         std::vector<SDL_Event> getEvents();
         void render();
@@ -22,6 +23,7 @@ class Display
         TextureManager *textureManager;
         Rect *camera;
         World *world;
+        Player *player;
         int frameStart;
         int frameTime;
         int frameDelay = 16;

@@ -53,6 +53,12 @@
 			"numeric": "cpp",
 			"random": "cpp",
 			"map": "cpp"
-		}
+		},
+		"cSpell.words": [
+			"lacunarity",
+			"Perlin",
+			"stonebricks",
+			"tokipona"
+		]
 	}
 }

@@ -10,6 +10,7 @@ TextureManager::TextureManager(SDL_Renderer *_renderer)
     renderer = _renderer;
 
     cacheBlockTextures();
+    cachePlayerTexture("player.png");
 }
 
 TextureManager::~TextureManager()
@@ -48,15 +49,25 @@ SDL_Texture *TextureManager::getCachedChunkTexture(const Chunk *chunk)
 }
 
 /*
+    Retrieve the cached player texture.
+*/
+SDL_Texture *TextureManager::getCachedPlayerTexture()
+{
+    return playerTexture;
+}
+
+/*
     Caches the texture for each block in the game.
 */
 void TextureManager::cacheBlockTextures()
 {
     cacheBlockTexture(BlockItemCatalog::air);
     cacheBlockTexture(BlockItemCatalog::dirt);
-    cacheBlockTexture(BlockItemCatalog::cobblestone);
-    cacheBlockTexture(BlockItemCatalog::grass);
     cacheBlockTexture(BlockItemCatalog::stone);
+    cacheBlockTexture(BlockItemCatalog::cobblestone);
+    cacheBlockTexture(BlockItemCatalog::stoneBricks);
+    cacheBlockTexture(BlockItemCatalog::grass);
+    cacheBlockTexture(BlockItemCatalog::grass2);
 }
 
 /*
@@ -75,6 +86,14 @@ void TextureManager::cacheChunkTexture(const Chunk *chunk)
 {
     SDL_Texture *texture; // TODO === === === TODO === === === TODO
     chunkTextureCache[chunk->textureCacheId] = texture;
+}
+
+/*
+    Cache the player texture
+*/
+void TextureManager::cachePlayerTexture(const std::string texture)
+{
+    playerTexture = loadTexture(texture);
 }
 
 /*
